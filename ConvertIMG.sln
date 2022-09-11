@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConvertIMG", "ConvertIMG\ConvertIMG.csproj", "{3C8B88C1-24A0-4083-A560-F5091612ABFA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A7B2615-532B-4D9C-985D-9FB5B80B5BBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebPTest", "..\..\WebP-wrapper-master\WebPTest\WebPTest.csproj", "{38700B2B-939E-439F-A975-E6FA91703BDB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Debug|x86.Build.0 = Debug|Any CPU
+		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Release|x86.ActiveCfg = Release|Any CPU
+		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Release|x86.Build.0 = Release|Any CPU
+		{38700B2B-939E-439F-A975-E6FA91703BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38700B2B-939E-439F-A975-E6FA91703BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38700B2B-939E-439F-A975-E6FA91703BDB}.Debug|x86.ActiveCfg = Debug|x86
+		{38700B2B-939E-439F-A975-E6FA91703BDB}.Debug|x86.Build.0 = Debug|x86
+		{38700B2B-939E-439F-A975-E6FA91703BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38700B2B-939E-439F-A975-E6FA91703BDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38700B2B-939E-439F-A975-E6FA91703BDB}.Release|x86.ActiveCfg = Release|x86
+		{38700B2B-939E-439F-A975-E6FA91703BDB}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {890ACF0F-CE39-4FF7-9E78-F357101D86F5}
+	EndGlobalSection
+EndGlobal
