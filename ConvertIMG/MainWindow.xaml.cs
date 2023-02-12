@@ -30,7 +30,7 @@ namespace ConvertIMG
             {
 
                 textBox.Text += "You selected: " + dialog.FileName + newLine;
-               // ConverterIMG var = new ConverterIMG();
+                ConverterIMG var = new ConverterIMG();
               
                 DirectoryInfo selectedFolder = new DirectoryInfo(dialog.FileName);
                 //show target directory
@@ -38,13 +38,13 @@ namespace ConvertIMG
                 //after i pick the folder to work in, the app window free_es, says unresponding in the title
                 //to fix it i decided to try launch heavy directory-walking-recursive loop with image processing
                 //on a different thread, hopefully it won't free_ up the UI
-                Thread myNewThread = new Thread(() => WorkThreadFunction(selectedFolder));
-                myNewThread.Start();
+                //Thread myNewThread = new Thread(() => WorkThreadFunction(selectedFolder));
+               // myNewThread.Start();
 
-                //what i had before threads
-                //  var.WalkDirectoryTree(selectedFolder);
-                //output list of low resultion files
-                //  textBox.Text += var.printSmallimageNames();
+                
+                  var.WalkDirectoryTree(selectedFolder);
+               // output list of low resultion files
+                  textBox.Text += var.printSmallimageNames();
 
 
             }
@@ -88,15 +88,18 @@ namespace ConvertIMG
         {
             try
             {
-                ConverterIMG var = new ConverterIMG();
-                //  output list of low resultion files
-                textBox.Text += var.printSmallimageNames();
-                var.WalkDirectoryTree(path);
+                this.Dispatcher.Invoke(() =>
+                {
+                    ConverterIMG var = new ConverterIMG();
+                    //  output list of low resultion files
+                    textBox.Text += var.printSmallimageNames();
+                    var.WalkDirectoryTree(path);
+                });
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                    //ex.Message;
+                   
             }
         }
 

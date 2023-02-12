@@ -20,16 +20,25 @@ namespace ConvertIMG
         {
             // Get a bitmap.
       
-            Bitmap original_Img;// = new Bitmap(0, 0);
+            Bitmap original_Img;
             
            //To Do: how to do this the righ way
             if (path.Contains(".webp"))
             {
-                //new way to convert webp to bitmap
-                var oringal_webP = new WebP();
-                //webp is converted in load function
-                Bitmap webP_Img = oringal_webP.Load(path);
-                original_Img = webP_Img;
+                //find a new way to convert webp to bitmap
+                try
+                {
+
+                    var webP = new WebP();
+                    //webp is converted in load function
+                    Bitmap webP_Img = webP.Load(path);
+                    // webP.Decode();
+                    original_Img = webP_Img;
+                }
+                catch
+                {
+                    original_Img = new Bitmap(path);
+                }
             }
             else
             {
@@ -73,25 +82,25 @@ namespace ConvertIMG
             if (croppedImage.Width > 1000) croppedImage = Resize_Picture(croppedImage, 1000, 0);
             if (croppedImage.Height > 1000) croppedImage = Resize_Picture(croppedImage, 0, 1000);
 
-            //dispose here, because i delete original img later
-            original_Img.Dispose();
-
+            
             //remove png/jpg/jiff/jpeg from name
             //ChangeName(path, original_Img.RawFormat) 
-            var new_img_path = ChangeName(path);
+            var new_img_path =  ChangeName(path);
             
             //small image
             if (croppedImage.Height < 400 || croppedImage.Width < 400)
             {
                           
-                low_resolution_file_names += "\n LOW RES: " + new_img_path + "\n";
+                low_resolution_file_names += "LOW RES: " + new_img_path + "\n";
              
             }
-           
-                //delete original image
+            //dispose here, because i delete original img later
+            original_Img.Dispose();
 
-                try
-                {
+            //delete original image
+
+            try
+            {
                     //try closing file first?
                     
                     File.Delete(path);
@@ -102,8 +111,8 @@ namespace ConvertIMG
                 }
           
              
-            //save(convert) to jpg cuz its not, better be sure
-            croppedImage.Save(new_img_path + ".jpg", jpgEncoder, myEncoderParameters);
+            //save(convert) to jpEg cuz its not, better be sure
+            croppedImage.Save(new_img_path + ".jpeg", jpgEncoder, myEncoderParameters);
 
             
             croppedImage.Dispose();
@@ -126,13 +135,18 @@ namespace ConvertIMG
                 {
                     Color debug = oldBmp.GetPixel(x, y);
                     // 255 255 255 is white
-                    if (oldBmp.GetPixel(x, y) != Color.FromArgb(255, 255, 255, 255))
-                    {
-                        // We need to interpret this!
+                    //ignore near pure white colors, because it does not crop to content
+                    
+                   // if (oldBmp.GetPixel(x, y) != Color.FromArgb(255, 255, 255, 255 ) & oldBmp.GetPixel(x, y) != Color.FromArgb(255, 254, 254, 254))
+                        if (debug != Color.FromArgb(255, 255, 255, 255) & debug != Color.FromArgb(255, 254, 254, 254)
+                                & debug != Color.FromArgb(255, 253, 253, 253))          
 
-                        // Check if it is the first one!
+                        {
+                            // We need to interpret this!
 
-                        if (IsFirstOne)
+                            // Check if it is the first one!
+
+                            if (IsFirstOne)
                         {
                             currentRect.X = x;
                             currentRect.Y = y;
@@ -140,6 +154,7 @@ namespace ConvertIMG
                             currentRect.Height = 1;
                             IsFirstOne = false;
                         }
+                     
                         else
                         {
 
@@ -169,7 +184,9 @@ namespace ConvertIMG
                             }
                         }
                     }
+                
                 }
+                if (currentRect.Width  <= 0  || currentRect.Height <= 0 ) return oldBmp;
             }
             return CropImage(oldBmp, currentRect.X, currentRect.Y, currentRect.Width, currentRect.Height);
         }
@@ -429,7 +446,7 @@ namespace ConvertIMG
             }
 
             NewBMP = new System.Drawing.Bitmap(iWidth, iHeight);
-            graphicTemp = System.Drawing.Graphics.FromImage(NewBMP);
+           graphicTemp = System.Drawing.Graphics.FromImage(NewBMP);
             graphicTemp.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
             graphicTemp.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
             graphicTemp.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
@@ -451,7 +468,7 @@ namespace ConvertIMG
             return low_resolution_file_names;
         }
 
-        //divide processed images by 2 and use 2 threads to complete the job faster
+       
        
 
     }

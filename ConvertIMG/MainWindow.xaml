@@ -13,10 +13,20 @@
             <ColumnDefinition Width="143*"/>
             <ColumnDefinition Width="303*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="button" Content="All sub folders" HorizontalAlignment="Left" Margin="45,53,0,0" VerticalAlignment="Top" Click="button_Click" Grid.ColumnSpan="2"/>
-        <Label x:Name="statusLabel" Content="No folder selected" HorizontalAlignment="Left" Margin="38,25,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.106,-0.08" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="38,114,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="354" Height="115" Grid.ColumnSpan="3"/>
-        <Button x:Name="button1" Content="One image" HorizontalAlignment="Left" Margin="155,51,0,0" VerticalAlignment="Top" Click="Button1_Click" Grid.Column="2"/>
+        <Button x:Name="button" Content="All sub folders" HorizontalAlignment="Left" Margin="46,53,0,0" VerticalAlignment="Top" Click="button_Click" Grid.ColumnSpan="2"/>
+        <Label x:Name="statusLabel" Content="No folder selected" HorizontalAlignment="Left" Margin="38,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.106,-0.08" Grid.ColumnSpan="3" Width="354"/>
+        <TextBox x:Name="textBox" 
+         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 HorizontalAlignment="Left" 
+                 Margin="38,114,0,0"
+                 Text=""
+                 TextWrapping="Wrap"
+                 VerticalAlignment="Top"
+                 Width="354"
+                 Height="115" 
+                 Grid.ColumnSpan="3"/>
+        <Button x:Name="button1" Content="One image" HorizontalAlignment="Left" Margin="155,53,0,0" VerticalAlignment="Top" Click="Button1_Click" Grid.Column="2"/>
 
     </Grid>
 </Window>
