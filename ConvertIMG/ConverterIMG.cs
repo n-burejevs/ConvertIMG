@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using WebPWrapper;
@@ -21,57 +22,61 @@ namespace ConvertIMG
             // Get a bitmap.
       
             Bitmap original_Img;
-            
+            //explodes when webp is renamed
            //To Do: how to do this the righ way
             if (path.Contains(".webp"))
             {
                 //find a new way to convert webp to bitmap
                 try
                 {
-
                     var webP = new WebP();
                     //webp is converted in load function
-                    Bitmap webP_Img = webP.Load(path);
-                    // webP.Decode();
-                    original_Img = webP_Img;
+                    original_Img = new Bitmap(webP.Load(path));
+                    //webp also has transparency
+                    original_Img = ReplaceTransparency(original_Img, Color.White);
+
                 }
-                catch
+                catch//if its a fake webp
                 {
                     original_Img = new Bitmap(path);
                 }
             }
             else
             {
-
+                //it wasnt a webp in the first place
                 original_Img = new Bitmap(path);
 
             }
 
             //png has transparency and because of that background gets black and crop function cant do its thing
+            //webp also has transp...........? what to do
+           // MessageBox.Show(original_Img.RawFormat.ToString());
 
-            if (original_Img.RawFormat.Equals(ImageFormat.Png)) original_Img = ReplaceTransparency(original_Img, Color.White);
+            if (original_Img.RawFormat.Equals(ImageFormat.Png)) 
+                            original_Img = ReplaceTransparency(original_Img, Color.White);
 
-            ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+
+          //  ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
 
             // Create an Encoder object based on the GUID
             // for the Quality parameter category.
-            System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
+            /*    System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
 
-            // Create an EncoderParameters object.
-            // An EncoderParameters object has an array of EncoderParameter
-            // objects. In this case, there is only one
-            // EncoderParameter object in the array.
+                // Create an EncoderParameters object.
+                // An EncoderParameters object has an array of EncoderParameter
+                // objects. In this case, there is only one
+                // EncoderParameter object in the array.
 
-            EncoderParameters myEncoderParameters = new EncoderParameters(1);
+                EncoderParameters myEncoderParameters = new EncoderParameters(1);
 
-            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 100L);
-            myEncoderParameters.Param[0] = myEncoderParameter;
+                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 90L);
+                myEncoderParameters.Param[0] = myEncoderParameter;*/
 
-            //debug
-            //original_Img.Save(path + ".jpg", jpgEncoder, myEncoderParameters);
-                            
-            var croppedImage = CropToContent(original_Img);
-                              
+           // Bitmap croppedImage = new Bitmap(CropToContent(original_Img));
+            //remove white background
+            Bitmap croppedImage = new Bitmap(ImageTrim(original_Img));
+            
+
             //resize and keep aspect ratio, 1000x1000 is max size
             //2 - Maintain aspect ratio, and specify the desired image Width.
             //  >> Call the function with fixed FinalWidth and set FinalHeight to 0
@@ -84,7 +89,6 @@ namespace ConvertIMG
 
             
             //remove png/jpg/jiff/jpeg from name
-            //ChangeName(path, original_Img.RawFormat) 
             var new_img_path =  ChangeName(path);
             
             //small image
@@ -96,51 +100,48 @@ namespace ConvertIMG
             }
             //dispose here, because i delete original img later
             original_Img.Dispose();
-
             //delete original image
-
-            try
-            {
-                    //try closing file first?
-                    
-                    File.Delete(path);
-                }//??????? use different catch exception??????????
-                catch (FileNotFoundException dirNotFound)
-                {
-                    Console.WriteLine(dirNotFound.Message);
-                }
+            File.Delete(path);
+            //try
+            //{
+            //try closing file first?
           
-             
-            //save(convert) to jpEg cuz its not, better be sure
-            croppedImage.Save(new_img_path + ".jpeg", jpgEncoder, myEncoderParameters);
-
             
+
+                //save(convert) to jpEg cuz its not, better be sure
+                ///check if file exists already
+            //    croppedImage.Save(new_img_path + ".jpeg", jpgEncoder, myEncoderParameters);
+                       croppedImage.Save(new_img_path + ".jpeg", ImageFormat.Jpeg);
+            //   }//??????? use different catch exception??????????
+            /*  catch (Exception ex)
+              {
+                  MessageBox.Show(ex.Message);
+              }*/
+            // if (pixelColor != Color.FromArgb(255, 255, 255, 255)/* & pixelColor != Color.FromArgb(255, 254, 254, 254) & pixelColor != Color.FromArgb(255, 253, 253, 253)*/)          
+
+
             croppedImage.Dispose();
         }
         //crop image
         //https://stackoverflow.com/questions/46022742/c-sharp-winforms-gdi-crop-an-image-to-its-contents
-        
-        
-        
-        Bitmap CropToContent(Bitmap oldBmp)
+               
+       /* Bitmap CropToContent(Bitmap oldBmp)
         {
             Rectangle currentRect = new Rectangle();
             bool IsFirstOne = true;
-
+          //debug  string shite = "";
             // Get a base color
 
             for (int y = 0; y < oldBmp.Height; y++)
             {
                 for (int x = 0; x < oldBmp.Width; x++)
                 {
-                    Color debug = oldBmp.GetPixel(x, y);
+                    Color pixelColor = oldBmp.GetPixel(x, y);
                     // 255 255 255 is white
                     //ignore near pure white colors, because it does not crop to content
-                    
-                   // if (oldBmp.GetPixel(x, y) != Color.FromArgb(255, 255, 255, 255 ) & oldBmp.GetPixel(x, y) != Color.FromArgb(255, 254, 254, 254))
-                        if (debug != Color.FromArgb(255, 255, 255, 255) & debug != Color.FromArgb(255, 254, 254, 254)
-                                & debug != Color.FromArgb(255, 253, 253, 253))          
-
+                                       
+                      if (pixelColor != Color.FromArgb(255, 255, 255, 255))
+       //& pixelColor != Color.FromArgb(255, 254, 254, 254) & pixelColor != Color.FromArgb(255, 253, 253, 253))          
                         {
                             // We need to interpret this!
 
@@ -186,10 +187,79 @@ namespace ConvertIMG
                     }
                 
                 }
-                if (currentRect.Width  <= 0  || currentRect.Height <= 0 ) return oldBmp;
+                
+                if (currentRect.Width  <= 0  || currentRect.Height <= 0 )  return oldBmp;
+            }
+           
+            return CropImage(oldBmp, currentRect.X, currentRect.Y, currentRect.Width, currentRect.Height);
+        }*/
+
+
+/*
+        Bitmap CropToContent(Bitmap oldBmp)
+        {
+            Rectangle currentRect = new Rectangle();
+            bool IsFirstOne = true;
+
+            // Get a base color
+
+            for (int y = 0; y < oldBmp.Height; y++)
+            {
+                for (int x = 0; x < oldBmp.Width; x++)
+                {
+                    Color pixelColor = oldBmp.GetPixel(x, y);
+                    // 255 255 255 is white
+                    //if (oldBmp.GetPixel(x, y) != Color.FromArgb(255, 255, 255, 255))
+                    if (pixelColor != Color.FromArgb(255, 255, 255, 255) & pixelColor != Color.FromArgb(255, 254, 254, 254) & pixelColor != Color.FromArgb(255, 253, 253, 253))
+
+                    {
+
+                        // We need to interpret this!
+
+                        // Check if it is the first one!
+
+                        if (IsFirstOne)
+                        {
+                            currentRect.X = x;
+                            currentRect.Y = y;
+                            currentRect.Width = 1;
+                            currentRect.Height = 1;
+                            IsFirstOne = false;
+                        }
+                        else
+                        {
+
+                            if (!currentRect.Contains(new Point(x, y)))
+                            {
+                                // This will run if this is out of the current rectangle
+
+                                if (x > (currentRect.X + currentRect.Width)) currentRect.Width = x - currentRect.X;
+                                if (x < (currentRect.X))
+                                {
+                                    // Move the rectangle over there and extend it's width to make the right the same!
+                                    int oldRectLeft = currentRect.Left;
+
+                                    currentRect.X = x;
+                                    currentRect.Width += oldRectLeft - x;
+                                }
+
+                                if (y > (currentRect.Y + currentRect.Height)) currentRect.Height = y - currentRect.Y;
+
+                                if (y < (currentRect.Y + currentRect.Height))
+                                {
+                                    int oldRectTop = currentRect.Top;
+
+                                    currentRect.Y = y;
+                                    currentRect.Height += oldRectTop - y;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             return CropImage(oldBmp, currentRect.X, currentRect.Y, currentRect.Width, currentRect.Height);
         }
+
         Bitmap CropImage(Image source, int x, int y, int width, int height)
         {
             Rectangle crop = new Rectangle(x, y, width, height);
@@ -200,7 +270,130 @@ namespace ConvertIMG
                 gr.DrawImage(source, new Rectangle(0, 0, bmp.Width, bmp.Height), crop, GraphicsUnit.Pixel);
             }
             return bmp;
+        }*/
+
+        //https://stackoverflow.com/questions/16583742/crop-image-white-space-in-c-sharp?noredirect=1&lq=1
+        private static Bitmap ImageTrim(Bitmap img)
+        {
+            //get image data
+            BitmapData bd = img.LockBits(new Rectangle(Point.Empty, img.Size),
+            ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            int[] rgbValues = new int[img.Height * img.Width];
+            Marshal.Copy(bd.Scan0, rgbValues, 0, rgbValues.Length);
+            img.UnlockBits(bd);
+
+
+            #region determine bounds
+            int left = bd.Width;
+            int top = bd.Height;
+            int right = 0;
+            int bottom = 0;
+
+            //determine top
+            for (int i = 0; i < rgbValues.Length; i++)
+            {
+                int color = rgbValues[i] & 0xffffff;
+                if (color != 0xffffff & color != 0xfefefe & color != 0xfdfdfd)// if (color != 0xffffff)
+                {
+                    int r = i / bd.Width;
+                    int c = i % bd.Width;
+
+                    if (left > c)
+                    {
+                        left = c;
+                    }
+                    if (right < c)
+                    {
+                        right = c;
+                    }
+                    bottom = r;
+                    top = r;
+                    break;
+                }
+            }
+
+            //determine bottom
+            for (int i = rgbValues.Length - 1; i >= 0; i--)
+            {
+                int color = rgbValues[i] & 0xffffff;
+                if (color != 0xffffff & color != 0xfefefe & color != 0xfdfdfd)// if (color != 0xffffff)
+                {
+                    int r = i / bd.Width;
+                    int c = i % bd.Width;
+
+                    if (left > c)
+                    {
+                        left = c;
+                    }
+                    if (right < c)
+                    {
+                        right = c;
+                    }
+                    bottom = r;
+                    break;
+                }
+            }
+
+            if (bottom > top)
+            {
+                for (int r = top + 1; r < bottom; r++)
+                {
+                    //determine left
+                    for (int c = 0; c < left; c++)
+                    {
+                        int color = rgbValues[r * bd.Width + c] & 0xffffff;
+                        if (color != 0xffffff & color != 0xfefefe & color != 0xfdfdfd)// if (color != 0xffffff)
+                        {
+                            if (left > c)
+                            {
+                                left = c;
+                                break;
+                            }
+                        }
+                    }
+
+                    //determine right
+                    for (int c = bd.Width - 1; c > right; c--)
+                    {
+                        int color = rgbValues[r * bd.Width + c] & 0xffffff;
+                        if (color != 0xffffff & color != 0xfefefe & color != 0xfdfdfd)// if (color != 0xffffff)
+                        {
+                            if (right < c)
+                            {
+                                right = c;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            int width = right - left + 1;
+            int height = bottom - top + 1;
+            #endregion
+
+            //copy image data
+            int[] imgData = new int[width * height];
+            for (int r = top; r <= bottom; r++)
+            {
+                Array.Copy(rgbValues, r * bd.Width + left, imgData, (r - top) * width, width);
+            }
+
+            //create new image
+            Bitmap newImage = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            BitmapData nbd
+                = newImage.LockBits(new Rectangle(0, 0, width, height),
+                    ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            Marshal.Copy(imgData, 0, nbd.Scan0, imgData.Length);
+            newImage.UnlockBits(nbd);
+
+            return newImage;
         }
+
+
+
+
+
 
 
         public void WalkDirectoryTree(System.IO.DirectoryInfo root)
