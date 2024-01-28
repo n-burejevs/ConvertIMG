@@ -21,7 +21,7 @@ namespace ConvertIMG
         {
 
             //get folder path
-            
+            // open and process all images inside
             CommonOpenFileDialog dialog = new CommonOpenFileDialog();
             dialog.InitialDirectory = "C:\\Users";
             dialog.IsFolderPicker = true;
@@ -41,7 +41,9 @@ namespace ConvertIMG
                 //Thread myNewThread = new Thread(() => WorkThreadFunction(selectedFolder));
                // myNewThread.Start();
 
-                
+                //Instead run through the files, write them down the path in to the array,
+                //pass each filepath to varyqualitylevel function
+
                   var.WalkDirectoryTree(selectedFolder);
                // output list of low resultion files
                   textBox.Text += var.printSmallimageNames();
@@ -77,13 +79,14 @@ namespace ConvertIMG
                 ConverterIMG conv = new ConverterIMG();
                                 
                     conv.VaryQualityLevel(filename);
-               // conv.data2(this);
+             
                 textBox.Text += conv.printSmallimageNames();
             }
 
             
         }
-        //
+        //TO DO take big list of filepaths, divide by 2, make 2 lists
+        //call varyqualitylevel simultaniously, async
         public void WorkThreadFunction(DirectoryInfo path)
         {
             try

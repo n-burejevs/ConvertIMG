@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+//using System.Drawing.Bitmap;
+//using System.Drawing.Drawing2D;
+//using System.Drawing.Imaging;
+//using System.Drawing.Bitmap;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using WebPWrapper;
+using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
+using Windows.Storage.Streams;
+
+
+
+
 namespace ConvertIMG
 {
     internal class ConverterIMG
@@ -23,17 +34,24 @@ namespace ConvertIMG
       
             Bitmap original_Img;
             //explodes when webp is renamed
-           //To Do: how to do this the righ way
-            if (path.Contains(".webp"))
+
+            ImageInfo imageInfo = SixLabors.ImageSharp.Image.Identify(path);
+            string sharpFormat = imageInfo.Metadata.DecodedImageFormat.Name.ToString();
+
+            
+            //if (sharpFormat == "Webp")
+            if (sharpFormat.Equals("webp", StringComparison.OrdinalIgnoreCase))
             {
                 //find a new way to convert webp to bitmap
+                //use imageSharp
                 try
                 {
                     var webP = new WebP();
                     //webp is converted in load function
+                   
                     original_Img = new Bitmap(webP.Load(path));
                     //webp also has transparency
-                    original_Img = ReplaceTransparency(original_Img, Color.White);
+                    original_Img = ReplaceTransparency(original_Img, System.Drawing.Color.White);
 
                 }
                 catch//if its a fake webp
@@ -53,7 +71,7 @@ namespace ConvertIMG
            // MessageBox.Show(original_Img.RawFormat.ToString());
 
             if (original_Img.RawFormat.Equals(ImageFormat.Png)) 
-                            original_Img = ReplaceTransparency(original_Img, Color.White);
+                            original_Img = ReplaceTransparency(original_Img, System.Drawing.Color.White);
 
 
           //  ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
@@ -88,7 +106,7 @@ namespace ConvertIMG
             if (croppedImage.Height > 1000) croppedImage = Resize_Picture(croppedImage, 0, 1000);
 
             
-            //remove png/jpg/jiff/jpeg from name
+            //remove png/jpg/jiff/jpeg/webp from name
             var new_img_path =  ChangeName(path);
             
             //small image
@@ -125,76 +143,6 @@ namespace ConvertIMG
         //crop image
         //https://stackoverflow.com/questions/46022742/c-sharp-winforms-gdi-crop-an-image-to-its-contents
                
-       /* Bitmap CropToContent(Bitmap oldBmp)
-        {
-            Rectangle currentRect = new Rectangle();
-            bool IsFirstOne = true;
-          //debug  string shite = "";
-            // Get a base color
-
-            for (int y = 0; y < oldBmp.Height; y++)
-            {
-                for (int x = 0; x < oldBmp.Width; x++)
-                {
-                    Color pixelColor = oldBmp.GetPixel(x, y);
-                    // 255 255 255 is white
-                    //ignore near pure white colors, because it does not crop to content
-                                       
-                      if (pixelColor != Color.FromArgb(255, 255, 255, 255))
-       //& pixelColor != Color.FromArgb(255, 254, 254, 254) & pixelColor != Color.FromArgb(255, 253, 253, 253))          
-                        {
-                            // We need to interpret this!
-
-                            // Check if it is the first one!
-
-                            if (IsFirstOne)
-                        {
-                            currentRect.X = x;
-                            currentRect.Y = y;
-                            currentRect.Width = 1;
-                            currentRect.Height = 1;
-                            IsFirstOne = false;
-                        }
-                     
-                        else
-                        {
-
-                            if (!currentRect.Contains(new Point(x, y)))
-                            {
-                                // This will run if this is out of the current rectangle
-
-                                if (x > (currentRect.X + currentRect.Width)) currentRect.Width = x - currentRect.X;
-                                if (x < (currentRect.X))
-                                {
-                                    // Move the rectangle over there and extend it's width to make the right the same!
-                                    int oldRectLeft = currentRect.Left;
-
-                                    currentRect.X = x;
-                                    currentRect.Width += oldRectLeft - x;
-                                }
-
-                                if (y > (currentRect.Y + currentRect.Height)) currentRect.Height = y - currentRect.Y;
-
-                                if (y < (currentRect.Y + currentRect.Height))
-                                {
-                                    int oldRectTop = currentRect.Top;
-
-                                    currentRect.Y = y;
-                                    currentRect.Height += oldRectTop - y;
-                                }
-                            }
-                        }
-                    }
-                
-                }
-                
-                if (currentRect.Width  <= 0  || currentRect.Height <= 0 )  return oldBmp;
-            }
-           
-            return CropImage(oldBmp, currentRect.X, currentRect.Y, currentRect.Width, currentRect.Height);
-        }*/
-
-
 /*
         Bitmap CropToContent(Bitmap oldBmp)
         {
@@ -276,7 +224,7 @@ namespace ConvertIMG
         private static Bitmap ImageTrim(Bitmap img)
         {
             //get image data
-            BitmapData bd = img.LockBits(new Rectangle(Point.Empty, img.Size),
+            BitmapData bd = img.LockBits(new System.Drawing.Rectangle(System.Drawing.Point.Empty, img.Size),
             ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
             int[] rgbValues = new int[img.Height * img.Width];
             Marshal.Copy(bd.Scan0, rgbValues, 0, rgbValues.Length);
@@ -382,7 +330,7 @@ namespace ConvertIMG
             //create new image
             Bitmap newImage = new Bitmap(width, height, PixelFormat.Format32bppArgb);
             BitmapData nbd
-                = newImage.LockBits(new Rectangle(0, 0, width, height),
+                = newImage.LockBits(new System.Drawing.Rectangle(0, 0, width, height),
                     ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
             Marshal.Copy(imgData, 0, nbd.Scan0, imgData.Length);
             newImage.UnlockBits(nbd);
@@ -413,18 +361,20 @@ namespace ConvertIMG
                 // This code just writes out the message and continues to recurse.
                 // You may decide to do something different here. For example, you
                 // can try to elevate your privileges and access the file again.
-                Console.WriteLine(e.Message);
+                //Console.WriteLine(e.Message);
+                MessageBox.Show(e.Message.ToString());
             }
 
             catch (System.IO.DirectoryNotFoundException e)
             {
-                Console.WriteLine(e.Message);
+                //Console.WriteLine(e.Message);
+                MessageBox.Show(e.Message.ToString());
             }
 
             if (files != null)
             {
                 //lets see whats in "files". maybe we can divide files and process images with 2 threads
-                int size = files.Length;
+                
 
                 foreach (System.IO.FileInfo fi in files)
                 {
@@ -439,7 +389,7 @@ namespace ConvertIMG
                     }
                     catch (System.Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        MessageBox.Show(e.Message.ToString());
                     }
 
 
@@ -456,7 +406,7 @@ namespace ConvertIMG
             }
         }
 
-        private static ImageCodecInfo GetEncoder(ImageFormat format)
+       /* private static ImageCodecInfo GetEncoder(ImageFormat format)
         {
 
             ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
@@ -469,7 +419,7 @@ namespace ConvertIMG
                 }
             }
             return null;
-        }
+        }*/
 
         //use switch/case and pass case parameter based on bitmap rawformat
         //how to pass rawformat as an function argument?
@@ -505,7 +455,7 @@ namespace ConvertIMG
             return result;
         }
         //https://stackoverflow.com/questions/772388/c-sharp-how-can-i-test-a-file-is-a-jpeg
-        public static bool HasJpegHeader(string filename)
+       /* public static bool HasJpegHeader(string filename)
         {
             try
             {
@@ -542,22 +492,22 @@ namespace ConvertIMG
             {
                 return false;
             }
-        }
+        }*/
 
     //can we detect the color of the background? and clear any background color?
 
         //https://stackoverflow.com/questions/618259/remove-transparency-in-images-with-c-sharp
-        public static Bitmap ReplaceTransparency(string file, Color background)
+        public static Bitmap ReplaceTransparency(string file, System.Drawing.Color background)
         {
-            return ReplaceTransparency(Image.FromFile(file), background);
+            return ReplaceTransparency(System.Drawing.Image.FromFile(file), background);
         }
 
-        public static Bitmap ReplaceTransparency(Image image, Color background)
+        public static Bitmap ReplaceTransparency(System.Drawing.Image image, System.Drawing.Color background)
         {
             return ReplaceTransparency((Bitmap)image, background);
         }
 
-        public static Bitmap ReplaceTransparency(Bitmap bitmap, Color background)
+        public static Bitmap ReplaceTransparency(System.Drawing.Bitmap bitmap, System.Drawing.Color background)
         {
             /* Important: you have to set the PixelFormat to remove the alpha channel.
              * Otherwise you'll still have a transparent image - just without transparent areas */
@@ -581,9 +531,9 @@ namespace ConvertIMG
         /// <param name="width">The width to resize to.</param>
         /// <param name="height">The height to resize to.</param>
         /// <returns>The resized image.</returns>
-        public static Bitmap ResizeImage(Image image, int width, int height)
+        public static Bitmap ResizeImage(System.Drawing.Image image, int width, int height)
         {
-            var destRect = new Rectangle(0, 0, width, height);
+            var destRect = new System.Drawing.Rectangle(0, 0, width, height);
             var destImage = new Bitmap(width, height);
 
             destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
