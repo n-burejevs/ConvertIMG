@@ -128,15 +128,8 @@ namespace ConvertIMG
 
                 //save(convert) to jpEg cuz its not, better be sure
                 ///check if file exists already
-            //    croppedImage.Save(new_img_path + ".jpeg", jpgEncoder, myEncoderParameters);
-                       croppedImage.Save(new_img_path + ".jpeg", ImageFormat.Jpeg);
-            //   }//??????? use different catch exception??????????
-            /*  catch (Exception ex)
-              {
-                  MessageBox.Show(ex.Message);
-              }*/
-            // if (pixelColor != Color.FromArgb(255, 255, 255, 255)/* & pixelColor != Color.FromArgb(255, 254, 254, 254) & pixelColor != Color.FromArgb(255, 253, 253, 253)*/)          
-
+           if(File.Exists(new_img_path + ".jpeg")) croppedImage.Save(new_img_path + " - COPY.jpeg", ImageFormat.Jpeg);
+        else croppedImage.Save(new_img_path + ".jpeg", ImageFormat.Jpeg);
 
             croppedImage.Dispose();
         }
@@ -382,7 +375,7 @@ namespace ConvertIMG
                     // want to open, delete or modify the file, then
                     // a try-catch block is required here to handle the case
                     // where the file has been deleted since the call to TraverseTree().
-                    Console.WriteLine(fi.FullName);
+                    //Console.WriteLine(fi.FullName);
                     try
                     {
                         VaryQualityLevel(fi.FullName);
@@ -405,21 +398,22 @@ namespace ConvertIMG
                 }
             }
         }
+     
 
-       /* private static ImageCodecInfo GetEncoder(ImageFormat format)
-        {
+        /* private static ImageCodecInfo GetEncoder(ImageFormat format)
+         {
 
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+             ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
 
-            foreach (ImageCodecInfo codec in codecs)
-            {
-                if (codec.FormatID == format.Guid)
-                {
-                    return codec;
-                }
-            }
-            return null;
-        }*/
+             foreach (ImageCodecInfo codec in codecs)
+             {
+                 if (codec.FormatID == format.Guid)
+                 {
+                     return codec;
+                 }
+             }
+             return null;
+         }*/
 
         //use switch/case and pass case parameter based on bitmap rawformat
         //how to pass rawformat as an function argument?
