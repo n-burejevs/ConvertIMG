@@ -27,6 +27,6 @@
                  Height="115" 
                  Grid.ColumnSpan="3"/>
         <Button x:Name="button1" Content="One image" HorizontalAlignment="Left" Margin="155,53,0,0" VerticalAlignment="Top" Click="Button1_Click" Grid.Column="2"/>
-
+        
     </Grid>
 </Window>

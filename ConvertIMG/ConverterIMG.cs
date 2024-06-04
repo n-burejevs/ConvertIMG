@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 //using System.Drawing.Bitmap;
 //using System.Drawing.Drawing2D;
 //using System.Drawing.Imaging;
@@ -14,8 +13,6 @@ using WebPWrapper;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using Windows.Storage.Streams;
-
-
 
 
 namespace ConvertIMG
@@ -34,7 +31,7 @@ namespace ConvertIMG
       
             Bitmap original_Img;
             //explodes when webp is renamed
-
+            //check for avif!
             ImageInfo imageInfo = SixLabors.ImageSharp.Image.Identify(path);
             string sharpFormat = imageInfo.Metadata.DecodedImageFormat.Name.ToString();
 
@@ -46,10 +43,18 @@ namespace ConvertIMG
                 //use imageSharp
                 try
                 {
-                    var webP = new WebP();
+                   // var webP = new WebP();
                     //webp is converted in load function
-                   
-                    original_Img = new Bitmap(webP.Load(path));
+
+                    var webpImage = SixLabors.ImageSharp.Image.Load(path);
+
+
+                    webpImage.SaveAsJpeg(path);
+
+
+                    original_Img = new Bitmap(path);
+
+
                     //webp also has transparency
                     original_Img = ReplaceTransparency(original_Img, System.Drawing.Color.White);
 
@@ -67,7 +72,7 @@ namespace ConvertIMG
             }
 
             //png has transparency and because of that background gets black and crop function cant do its thing
-            //webp also has transp...........? what to do
+            //
            // MessageBox.Show(original_Img.RawFormat.ToString());
 
             if (original_Img.RawFormat.Equals(ImageFormat.Png)) 
@@ -416,9 +421,10 @@ namespace ConvertIMG
          }*/
 
         //use switch/case and pass case parameter based on bitmap rawformat
-        //how to pass rawformat as an function argument?
+        //
+        //use imagesharp library to determine format?
         //public string ChangeName(string input, System.Drawing.Imaging.ImageFormat format) { }
-        public string ChangeName(string input = "Test txt C:\\Users\\shark\\Desktop\\atteli\\12345\\1.png")
+        public string ChangeName(string input)
         {
 
             var pattern = ".png";
@@ -605,8 +611,21 @@ namespace ConvertIMG
             return low_resolution_file_names;
         }
 
-       
-       
+
+        /*public Bitmap ConvertAvif(string imagePath)
+        {
+
+            using (var image = SixLabors.ImageSharp.Image.//Load(path))
+            {
+
+                var drawingImage = image.ToArray().ToDrawingImage();
+                image.Save("modified_image_path.webp");
+            }
+
+            return;
+        }*/
+
+      
 
     }
 

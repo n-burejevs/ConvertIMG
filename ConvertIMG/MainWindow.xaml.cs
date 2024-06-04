@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Windows;
 
+
 namespace ConvertIMG
 {
     /// <summary>
@@ -63,7 +64,7 @@ namespace ConvertIMG
 
             // Set filter for file extension and default file extension 
             dlg.DefaultExt = ".png";
-            dlg.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif|WEBP Files (*.webp)|*.webp";
+            dlg.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif|WEBP Files (*.webp)|*.webp|AVIF Files(*.avif) | *.avif";
 
             // Display OpenFileDialog by calling ShowDialog method 
             Nullable<bool> result = dlg.ShowDialog();
@@ -106,9 +107,8 @@ namespace ConvertIMG
             }
         }
 
-      
-
-    }
+       
+        }
 
   
 }

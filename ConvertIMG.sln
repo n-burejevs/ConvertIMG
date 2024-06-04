@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConvertIMGtoJpeg", "Convert
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A7B2615-532B-4D9C-985D-9FB5B80B5BBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebPTest", "..\..\WebP-wrapper-master\WebPTest\WebPTest.csproj", "{38700B2B-939E-439F-A975-E6FA91703BDB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,14 +23,6 @@ Global
 		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Release|x86.ActiveCfg = Release|Any CPU
 		{3C8B88C1-24A0-4083-A560-F5091612ABFA}.Release|x86.Build.0 = Release|Any CPU
-		{38700B2B-939E-439F-A975-E6FA91703BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38700B2B-939E-439F-A975-E6FA91703BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38700B2B-939E-439F-A975-E6FA91703BDB}.Debug|x86.ActiveCfg = Debug|x86
-		{38700B2B-939E-439F-A975-E6FA91703BDB}.Debug|x86.Build.0 = Debug|x86
-		{38700B2B-939E-439F-A975-E6FA91703BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38700B2B-939E-439F-A975-E6FA91703BDB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38700B2B-939E-439F-A975-E6FA91703BDB}.Release|x86.ActiveCfg = Release|x86
-		{38700B2B-939E-439F-A975-E6FA91703BDB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
