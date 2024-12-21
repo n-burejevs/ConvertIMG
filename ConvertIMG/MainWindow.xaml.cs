@@ -18,7 +18,7 @@ namespace ConvertIMG
             InitializeComponent();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
 
             //get folder path
@@ -47,7 +47,7 @@ namespace ConvertIMG
 
                   var.WalkDirectoryTree(selectedFolder);
                // output list of low resultion files
-                  textBox.Text += var.printSmallimageNames();
+                  textBox.Text += var.PrintSmallimageNames();
 
 
             }
@@ -81,7 +81,7 @@ namespace ConvertIMG
                                 
                     conv.VaryQualityLevel(filename);
              
-                textBox.Text += conv.printSmallimageNames();
+                textBox.Text += conv.PrintSmallimageNames();
             }
 
             
@@ -96,7 +96,7 @@ namespace ConvertIMG
                 {
                     ConverterIMG var = new ConverterIMG();
                     //  output list of low resultion files
-                    textBox.Text += var.printSmallimageNames();
+                    textBox.Text += var.PrintSmallimageNames();
                     var.WalkDirectoryTree(path);
                 });
             }

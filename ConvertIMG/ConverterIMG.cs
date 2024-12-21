@@ -9,7 +9,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using WebPWrapper;
+//using WebPWrapper;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using Windows.Storage.Streams;
@@ -30,7 +30,7 @@ namespace ConvertIMG
             // Get a bitmap.
       
             Bitmap original_Img;
-            //explodes when webp is renamed
+           
             //check for avif!
             ImageInfo imageInfo = SixLabors.ImageSharp.Image.Identify(path);
             string sharpFormat = imageInfo.Metadata.DecodedImageFormat.Name.ToString();
@@ -606,7 +606,7 @@ namespace ConvertIMG
         //since i dont put "_small" in file names,
         //i cant think of otherways to inform user that images are smaller than needed
        
-        public string printSmallimageNames()
+        public string PrintSmallimageNames()
         {
             return low_resolution_file_names;
         }
