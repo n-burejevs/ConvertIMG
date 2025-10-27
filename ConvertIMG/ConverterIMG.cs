@@ -12,7 +12,7 @@ using System.Windows.Forms;
 //using WebPWrapper;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
-using Windows.Storage.Streams;
+//using Windows.Storage.Streams;
 
 
 namespace ConvertIMG
@@ -31,7 +31,8 @@ namespace ConvertIMG
       
             Bitmap original_Img;
            
-            //check for avif!
+            //check for avif! 
+            //TO DO: ignore desktop.ini file
             ImageInfo imageInfo = SixLabors.ImageSharp.Image.Identify(path);
             string sharpFormat = imageInfo.Metadata.DecodedImageFormat.Name.ToString();
 
@@ -77,23 +78,6 @@ namespace ConvertIMG
 
             if (original_Img.RawFormat.Equals(ImageFormat.Png)) 
                             original_Img = ReplaceTransparency(original_Img, System.Drawing.Color.White);
-
-
-          //  ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
-
-            // Create an Encoder object based on the GUID
-            // for the Quality parameter category.
-            /*    System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
-
-                // Create an EncoderParameters object.
-                // An EncoderParameters object has an array of EncoderParameter
-                // objects. In this case, there is only one
-                // EncoderParameter object in the array.
-
-                EncoderParameters myEncoderParameters = new EncoderParameters(1);
-
-                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 90L);
-                myEncoderParameters.Param[0] = myEncoderParameter;*/
 
            // Bitmap croppedImage = new Bitmap(CropToContent(original_Img));
             //remove white background
@@ -384,6 +368,7 @@ namespace ConvertIMG
                     try
                     {
                         VaryQualityLevel(fi.FullName);
+
                     }
                     catch (System.Exception e)
                     {
@@ -531,7 +516,7 @@ namespace ConvertIMG
         /// <param name="width">The width to resize to.</param>
         /// <param name="height">The height to resize to.</param>
         /// <returns>The resized image.</returns>
-        public static Bitmap ResizeImage(System.Drawing.Image image, int width, int height)
+       /* public static Bitmap ResizeImage(System.Drawing.Image image, int width, int height)
         {
             var destRect = new System.Drawing.Rectangle(0, 0, width, height);
             var destImage = new Bitmap(width, height);
@@ -554,7 +539,8 @@ namespace ConvertIMG
             }
 
             return destImage;
-        }
+        }*/
+
         //https://www.codicode.com/art/resize_images_and_keep_aspect_ra.aspx
         //1- Set the destination Width and Height(but this can result in skewed images when the aspect ratio is not identical)
         //  >> Call the function and set a fixed FinalWidth and a fixed FinalHeight
